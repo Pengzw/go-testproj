@@ -1,0 +1,17 @@
+[INFO   2021-12-26 02:11:16.3519 1] [appserver.go:func1:54] [info] start http server listening 0.0.0.0:8000 
+ 
+[INFO   2021-12-26 02:13:31.4839 1] [appserver.go:func1:54] [info] start http server listening 0.0.0.0:8000 
+ 
+[DEBUG  2021-12-26 02:13:31.4845 1] [appserver.go:newServer:78] errgroup exit: listen tcp 0.0.0.0:8000: bind: address already in use
+ 
+[INFO   2021-12-26 02:13:39.0794 1] [appserver.go:func1:54] [info] start http server listening 0.0.0.0:8000 
+ 
+[DEBUG  2021-12-26 02:13:39.0797 1] [appserver.go:newServer:78] errgroup exit: listen tcp 0.0.0.0:8000: bind: address already in use
+ 
+[INFO   2021-12-26 02:17:57.4448 1] [appserver.go:func1:54] [info] start http server listening 0.0.0.0:8000 
+ 
+[INFO   2021-12-26 02:21:13.5943 1] [appserver.go:func1:54] [info] start http server listening 0.0.0.0:8000 
+ 
+[DEBUG  2021-12-26 02:21:13.5947 1] [appserver.go:newServer:78] errgroup exit: listen tcp 0.0.0.0:8000: bind: address already in use 
+[INFO   2021-12-26 02:22:01.9136 1] [appserver.go:func1:54] [info] start http server listening 0.0.0.0:8000 
+ 

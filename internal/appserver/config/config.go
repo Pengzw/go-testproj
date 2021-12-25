@@ -13,13 +13,14 @@ import (
 	"gopkg.in/ini.v1"
 
 	"goships/internal/pkg/rootpath"
-	// "goships/pkg/toolkit"
+	"goships/pkg/database/sql"
+	"goships/pkg/cache/redis"
 )
 
 type Config struct{
 	Server 			*Server
-	MysqlMain 		*Database
-	RedisTemp 		*Redis
+	MysqlMain 		*sql.Database
+	RedisTemp 		*redis.Redis
 }
 type Server struct {
 	Sid     		int
@@ -30,42 +31,20 @@ type Server struct {
 	WriteTimeout 	time.Duration
 }
 
-type Database struct {
-	Addr         	string          // for trace
-	DSN          	string          // write data source name.
-	ReadDSN      	[]string        // read data source name.
-	Active       	int             // pool
-	Idle         	int             // pool
-	IdleTimeout  	time.Duration   // connect max life time.
-	QueryTimeout 	time.Duration   // query sql timeout
-	ExecTimeout  	time.Duration   // execute sql timeout
-	TranTimeout  	time.Duration   // transaction sql timeout
-}
-
-type Redis struct {
-	Name        	string
-	Proto        	string
-	Addr         	string
-	Passwd       	string
-	DB       	 	int
-	DialTimeout  	time.Duration
-	ReadTimeout  	time.Duration
-	WriteTimeout 	time.Duration
-} 
 const (
 	ConfPath 		= "configs/common.ini"
 )
 var (
-	daemon 				bool
-	sid 				int
-	Port 				int
+	daemon 			bool
+	sid 			int
+	Port 			int
 
-	err 				error
-	cfg 				*ini.File
-	Conf 			= &Config{
-		Server: 		&Server{},
-		MysqlMain: 		&Database{},
-		RedisTemp:  	&Redis{},
+	err 			error
+	cfg 			*ini.File
+	Data 			= &Config{
+		Server : 		&Server{},
+		MysqlMain : 	&sql.Database{},
+		RedisTemp :  	&redis.Redis{},
 	} 
 )
 
@@ -92,7 +71,7 @@ func Init (apptype string) {
 
 	// 初始化配置参数
 	if Port > 8000 {
-		Conf.Server.HttpPort = strconv.Itoa(Port)
+		Data.Server.HttpPort = strconv.Itoa(Port)
 	}
 }
 
@@ -100,15 +79,15 @@ func Init (apptype string) {
 func ReadConfig(sourceConfig string){
 	cfg, err = ini.Load(sourceConfig)
 	if err != nil {
-		log.Fatalf("[error] conf.Init, fail to sourceConfig: '%s'; \nerr: %s\n", sourceConfig, err.Error())
+		log.Fatalf("[error] ini.Load, fail to sourceConfig: '%s'; \nerr: %s\n", sourceConfig, err.Error())
 	}
-	mapTo("Server", &Conf.Server)
-	Conf.Server.ReadTimeout 	= Conf.Server.ReadTimeout * time.Second
-	Conf.Server.WriteTimeout 	= Conf.Server.WriteTimeout * time.Second
+	mapTo("Server", &Data.Server)
+	Data.Server.ReadTimeout 	= Data.Server.ReadTimeout * time.Second
+	Data.Server.WriteTimeout 	= Data.Server.WriteTimeout * time.Second
 
 
-	mapTo("MysqlMain", &Conf.MysqlMain)
-	mapTo("RedisTemp", &Conf.RedisTemp)
+	mapTo("MysqlMain", &Data.MysqlMain)
+	mapTo("RedisTemp", &Data.RedisTemp)
 }
 
 
