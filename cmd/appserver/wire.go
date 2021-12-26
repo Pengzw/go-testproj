@@ -13,6 +13,6 @@ import (
 )
 
 // initApp init kratos application.
-func initApp(*config.Config) (func(), error) {
-	panic(wire.Build(server.ProviderSet, data.ProviderSet, service.ProviderSet, StartServer))
+func initApp(*config.Config) (error) {
+	panic(wire.Build(StartServer, server.ProviderSet, service.ProviderSet, data.ProviderSet))
 }

@@ -13,8 +13,8 @@ import (
 	"github.com/pkg/errors"
 	"golang.org/x/sync/errgroup"
 	"goships/internal/appserver/config"
-	"goships/internal/appserver/service"
-	"goships/internal/appserver/server"
+	// "goships/internal/appserver/service"
+	// "goships/internal/appserver/server"
 	"goships/internal/appserver/data"
 	"goships/pkg/logs"
 )
@@ -24,28 +24,14 @@ func main() {
 	logs.Init(config.Data.Server.Sid, fmt.Sprintf("log/appserver.%d.debug.log", config.Data.Server.Sid), logs.LOG_DEBUG)// LOG_FATAL最高错误级别
 	log.Printf("Server: %+v \n", config.Data.Server)
 
-	dataData, cleanup, err := data.NewData(data.NewMysql(config.Data))
-	if err != nil {
-		panic(err)
-		return 
-	}
-	defer cleanup()
-
-	server 				:= server.NewHttp(config.Data, service.NewService(dataData))
-	StartServer(server)
-	// cleanup, err := initApp(config.Data)
-	// if err != nil {
-	// 	panic(err)
-	// }
-	// defer cleanup()
-	// log.Println("Server cleanup")
-	// // // start and wait for stop signal
-	// // if err := app.Run(); err != nil {
-	// // 	panic(err)
-	// // }
+	// dataData 			:= data.NewData(data.NewMysql(config.Data))
+	// server 				:= server.NewHttp(config.Data, service.NewService(dataData))
+	// StartServer(server)
+	log.Printf("initApp: %+v \n", initApp(config.Data))
+	
 }
 
-func StartServer(server *http.Server) (err error) {
+func StartServer(server *http.Server, dataData *data.Data) (err error) {
 	log.Println("Server start")
 	eg, ctx 		:= errgroup.WithContext(context.Background())
 
@@ -77,6 +63,8 @@ func StartServer(server *http.Server) (err error) {
 	logs.Debug("errgroup exit: %+v", err)
 	log.Printf("errgroup exit: %+v\n", err)
 	log.Println("Server end")
+
+	dataData.CloneData()
 	return
 }
 // // initApp init kratos application.

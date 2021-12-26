@@ -37,16 +37,18 @@ func NewMysql(data *config.Config) *sql.DB {
 // 	return rds
 // }
 
-func NewData(mainDb *sql.DB)(*Data, func(), error) {
-	d 			:= &Data{
+func NewData(mainDb *sql.DB)(*Data) {
+	return &Data{
 		MainDb:  mainDb,
 		// TempRds: temprds,
 	}
-	return d, func() {
-		if err := d.MainDb.Close(); err != nil {
-			logs.Error("d.MainDb.Close() err : %+v", err)
-		}
-	}, nil
+}
+
+func (m *Data) CloneData() (err error) {
+	if err := m.MainDb.Close(); err != nil {
+		logs.Error("d.MainDb.Close() err : %+v", err)
+	}
+	return
 }
 
 func (m *Data) IsErrNoRows(err error) bool {
